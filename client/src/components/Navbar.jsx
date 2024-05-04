@@ -41,7 +41,7 @@ function NavbarPage() {
             <FaMoon />
           </Button>
           <Link to="/sign-in">
-            <Button type="submit" gradientDuoTone="purpleToBlue">
+            <Button type="submit" outline gradientDuoTone="purpleToBlue">
               Sign-in
             </Button>
           </Link>
