@@ -15,6 +15,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    photourl: {
+      type: String,
+      default: "https://www.seekpng.com/png/detail/966-9665317_placeholder-image-person-jpg.png",
+    }
   },
   { timestamps: true }
 );

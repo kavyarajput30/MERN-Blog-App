@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Checkbox, Label, TextInput, Alert, Spinner } from "flowbite-react";
+import OAuth from "../components/OAuth";
+import {
+  Button,
+  Checkbox,
+  Label,
+  TextInput,
+  Alert,
+  Spinner,
+} from "flowbite-react";
 import { Toast } from "flowbite-react";
 import { HiFire } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
+import axios from "axios";
 
 function SignUp() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -25,28 +34,22 @@ function SignUp() {
     e.preventDefault();
     try {
       setloading(true);
-      const res = await fetch("http://localhost:8000/api/v1/auth/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      if (result.success == false) {
-        setErrMsg(result.message);
-      }
-      if (res.ok) {
-        setErrMsg(null);
-        setData({
-          username: "",
-          email: "",
-          password: "",
+      const res = await axios
+        .post("api/v1/auth/sign-up", data)
+        .then((res) => {
+          console.log(res.data);
+          setErrMsg(null);
+          setData({
+            username: "",
+            email: "",
+            password: "",
+          });
+          setloading(false);
+          navigate("/sign-in");
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        navigate("/sign-in");
-      }
-      console.log(result);
-      setloading(false);
     } catch (err) {
       setErrMsg(err.message);
       console.log(err);
@@ -127,17 +130,18 @@ function SignUp() {
               />
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink">
-              {loading ? (<>
-              <Spinner color="purple"/>
-              <span className="pl-3">Loading....</span>
-              </>) : "Sign Up"}
+              {loading ? (
+                <>
+                  <Spinner color="purple" />
+                  <span className="pl-3">Loading....</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
+            <OAuth />
           </form>
-          <div className="flex gap-2 text-sm mt-5">
-            <Button gradientDuoTone="purpleToPink" outline>
-              Sign Up with Google
-            </Button>
-          </div>
+          
           <div className="flex gap-2 text-sm mt-5">
             <span>Already have an account?</span>
             <Link to="/sign-in" className="text-blue-500">

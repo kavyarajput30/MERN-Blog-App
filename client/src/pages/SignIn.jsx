@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Label, TextInput, Alert, Spinner, Toast } from "flowbite-react";
-import { HiFire } from "react-icons/hi";
 import { HiInformationCircle } from "react-icons/hi";
-function SignIn() {
+import {signInStart, signInSuccess, signInFailure} from "../features/user/userSlice.js"
+import { useDispatch ,useSelector} from "react-redux";
+import axios from "axios";
+import OAuth from "../components/OAuth.jsx";
 
+function SignIn() {
+ 
     const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const [errMsg, setErrMsg] = useState(null);
-  const [loading, setloading] = useState(false);
+  const {loading,error:errMsg} = useSelector((state) => state.user)
+  const dispatch = useDispatch();
   const handleInputChange = (e) => {
     let name = e.target.name;
     let value = e.target.value.trim();
@@ -21,8 +25,7 @@ function SignIn() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      setloading(true);
-      setErrMsg(null);
+dispatch(signInStart())
       const res = await fetch("http://localhost:8000/api/v1/auth/sign-in", { 
         
         method: "POST",
@@ -35,10 +38,10 @@ function SignIn() {
       });
       const result = await res.json();
       if (result.success == false) {
-        setErrMsg(result.message);
+       dispatch(signInFailure(result.message))
       }
       if (res.ok) {
-        setErrMsg(null);
+        dispatch(signInSuccess(result))
         setData({
           email: "",
           password: "",
@@ -46,9 +49,8 @@ function SignIn() {
         navigate("/");
       }
       console.log(result);
-      setloading(false);
     } catch (err) {
-      setErrMsg(err.message);
+      dispatch(signInFailure(err.message))
       console.log(err);
     }
   };
@@ -134,12 +136,8 @@ function SignIn() {
               <span className="pl-3">Loading....</span>
               </>) : "Sign In"}
             </Button>
+            <OAuth/>
           </form>
-          <div className="flex gap-2 text-sm mt-5">
-            <Button gradientDuoTone="purpleToPink" outline>
-              Sign In with Google
-            </Button>
-          </div>
           <div className="flex gap-2 text-sm mt-5">
             <span>Don't have an account?</span>
             <Link to="/sign-up" className="text-blue-500">

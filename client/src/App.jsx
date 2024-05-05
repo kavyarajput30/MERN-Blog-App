@@ -7,7 +7,10 @@ import Dashboard from "./pages/Dashboard.jsx";
 import NavbarPage from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { Routes, Route } from "react-router-dom";
+import axios from "axios";
 function App() {
+  axios.defaults.baseURL = "http://localhost:8000";
+  axios.defaults.withCredentials = true;
   return (
     <>
       <NavbarPage />
