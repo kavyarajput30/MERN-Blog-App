@@ -105,7 +105,6 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
   if (!newUser) {
     next(errorHandler(500, "Error while creating user"));
   }
-
   const accessToken = jwt.sign(
     { id: newUser._id, username: newUser.username },
     process.env.JWT_SECRET

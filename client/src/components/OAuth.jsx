@@ -28,7 +28,7 @@ function OAuth() {
         });
 
         if(res.data.success) {
-            dispatch(signInSuccess(res.data));
+            dispatch(signInSuccess(res.data.data));
             navigate('/');
         }
       } catch (e) {
