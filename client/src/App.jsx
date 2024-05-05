@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp.jsx";
 import Project from "./pages/Project.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import NavbarPage from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/project" element={<Project />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      <Footer/>
     </>
   );
 }
