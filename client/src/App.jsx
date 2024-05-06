@@ -8,6 +8,7 @@ import NavbarPage from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
   axios.defaults.withCredentials = true;
@@ -19,10 +20,12 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
         <Route path="/project" element={<Project />} />
-        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </>
   );
 }
