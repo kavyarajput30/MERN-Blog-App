@@ -120,4 +120,5 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
     .json(new APIResponce(200, "User created successfully", newUser, true));
 });
 
+
 export { signup, signin, googleSignIn };

@@ -3,8 +3,12 @@ import axios from 'axios'
 import { useEffect } from 'react'
 
 function Home() {
+    const tryingfunc = async () => {
+        const res = await axios.get('http://localhost:8000');
+        console.log(res)
+    }
     useEffect(() => {
-        axios.get('http://localhost:8000/api/v1/user/test').then((res) => console.log(res))
+         tryingfunc();
     })
     return (
         <>
