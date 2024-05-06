@@ -8,35 +8,32 @@ const usertest = (req, res) => {
 };
 const updateUser = wrapAsync(async (req, res, next) => {
   const { userId } = req.params;
-  console.log("user id is", userId);
   if (!userId) {
-    next(errorHandler(400, "Login first"));
+   return next(errorHandler(400, "Login first"));
   }
   if (userId !== req.user.id) {
     next(errorHandler(403, "You can only update your account"));
   }
-  console.log("request user", req.user);
   const { username, email, password, photourl } = req.body;
-
   if(password){
     if(password.length < 6){
-      next(errorHandler(400, "Password must be at least 6 characters"));
+     return next(errorHandler(400, "Password must be at least 6 characters"));
     }
   }
   const hashedpass = bcryptjs.hashSync(password, 10);
 
   if(username){
     if(username.length < 7 || username.length > 20){
-      next(errorHandler(400, "Username must be between 7 and 20 characters"));
+      return next(errorHandler(400, "Username must be between 7 and 20 characters"));
     }
     if(username.includes(" ")){
-      next(errorHandler(400, "Username cannot contain spaces"));
+     return next(errorHandler(400, "Username cannot contain spaces"));
     }
     if(username !== username.toLowerCase()){
-      next(errorHandler(400, "Username must be lowercase"));
+     return next(errorHandler(400, "Username must be lowercase"));
     }
     if(!username.match(/^[a-zA-Z0-9]+$/)){
-      next(errorHandler(400, "Username must only contain letters and numbers"));
+      return next(errorHandler(400, "Username must only contain letters and numbers"));
     }
   }
 
@@ -48,6 +45,9 @@ const updateUser = wrapAsync(async (req, res, next) => {
     photourl,
   }, { new: true });
 
+  if(!updateduser){
+    return next(errorHandler(404, "User not Updated"));
+  }
   res.status(200).json(new APIResponce(200, "User Updated", updateduser, true));
 });
 

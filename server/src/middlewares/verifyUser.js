@@ -3,7 +3,6 @@ import { errorHandler } from "../utils/error.js";
 
 export const verifyUser = (req, res, next) => {
   const token = req.cookies.accessToken;
-  console.log("verify user", token);
   if (!token) {
     return next(errorHandler(401, "Please login to access this resource"));
   }

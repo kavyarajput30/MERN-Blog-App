@@ -1,19 +1,30 @@
 import { TextInput, Button, Alert } from "flowbite-react";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { getDownloadURL, getStorage } from "firebase/storage";
-import { ref } from "firebase/storage";
-import { uploadBytesResumable } from "firebase/storage";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getDownloadURL,
+  getStorage,
+  uploadBytesResumable,
+  ref,
+} from "firebase/storage";
 import app from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
+import {
+  updateStart,
+  updateSuccess,
+  updateFailure,
+} from "../features/user/userSlice";
 import "react-circular-progressbar/dist/styles.css";
 function DashProfile() {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imagefileURL, setImageFileURL] = useState(null);
   const filePickerRef = useRef();
   const [imagefileUploadprogress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileuploadError] = useState(null);
+  const [formData, setFormData] = useState({});
 
   const handleInputImage = (e) => {
     const file = e.target.files[0];
@@ -50,9 +61,38 @@ function DashProfile() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileURL(downloadURL);
+          setFormData({ ...formData, photourl: downloadURL });
         });
       }
     );
+  };
+  const handleInput = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    if (Object.keys(formData).length === 0) {
+      return;
+    }
+    try {
+      dispatch(updateStart());
+      const res = await axios.put(
+        `/api/v1/user/update/${currentUser?._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.data.success) {
+        dispatch(updateSuccess(res.data.data));
+      }
+    } catch (err) {
+      if (err.response) {
+        dispatch(updateFailure(err.response.data.message));
+      }
+    }
   };
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
@@ -106,14 +146,26 @@ function DashProfile() {
           type="text"
           id="username"
           defaultValue={currentUser?.username}
+          onChange={handleInput}
         />
-        <TextInput type="email" id="email" defaultValue={currentUser?.email} />
+        <TextInput
+          type="email"
+          id="email"
+          defaultValue={currentUser?.email}
+          onChange={handleInput}
+        />
         <TextInput
           type="password"
           id="password"
           defaultValue={currentUser?.password}
+          onChange={handleInput}
         />
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline>
+        <Button
+          type="submit"
+          gradientDuoTone="purpleToBlue"
+          outline
+          onClick={handleFormSubmit}
+        >
           Update
         </Button>
       </form>
