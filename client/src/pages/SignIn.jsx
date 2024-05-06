@@ -37,11 +37,12 @@ dispatch(signInStart())
         body: JSON.stringify(data),
       });
       const result = await res.json();
+
       if (result.success == false) {
        dispatch(signInFailure(result.message))
       }
       if (res.ok) {
-        dispatch(signInSuccess(result))
+        dispatch(signInSuccess(result.data))
         setData({
           email: "",
           password: "",
