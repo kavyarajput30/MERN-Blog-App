@@ -14,10 +14,16 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserFailure,
+  deleteUserSuccess,
+  deleteUserStart,
 } from "../features/user/userSlice";
 import "react-circular-progressbar/dist/styles.css";
+import { Modal } from "flowbite-react";
+import {useNavigate} from "react-router-dom";
 function DashProfile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imagefileURL, setImageFileURL] = useState(null);
@@ -25,6 +31,7 @@ function DashProfile() {
   const [imagefileUploadprogress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileuploadError] = useState(null);
   const [formData, setFormData] = useState({});
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleInputImage = (e) => {
     const file = e.target.files[0];
@@ -95,15 +102,24 @@ function DashProfile() {
     }
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteUser = async () => {
+    setOpenDeleteModal(false);
     try {
-
-    }catch(err){
+      dispatch(deleteUserStart());
+      // console.log(`user deleted ${currentUser?._id}`)
+      const res = await axios.delete(`/api/v1/user/delete/${currentUser?._id}`);
+      if (res.data.success) {
+        dispatch(deleteUserSuccess());
+        navigate("/sign-in");
+      }
+    } catch (err) {
+      console.log(err);
       if (err.response) {
-        dispatch(updateFailure(err.response.data.message));
+        dispatch(deleteUserFailure(err.response.data.message));
       }
     }
-  }
+  };
+
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -180,9 +196,28 @@ function DashProfile() {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-6">
-        <span className="cursor-pointer" onClick={handleDeleteAccount}>Delete Account</span>
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            setOpenDeleteModal(true);
+          }}
+        >
+          Delete Account
+        </span>
         <span className="cursor-pointer">Sign Out</span>
       </div>
+      <Modal popup size="md"show={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
+        <Modal.Header>
+          Are You Sure you Want to Delete?
+        </Modal.Header>
+
+        <Modal.Footer>
+          <Button color="failure" onClick={handleDeleteUser}>Yes, Delete</Button>
+          <Button color="gray" onClick={() => setOpenDeleteModal(false)}>
+            No, Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
