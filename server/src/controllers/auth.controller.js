@@ -55,7 +55,7 @@ const signin = wrapAsync(async (req, res, next) => {
   }
 
   const accessToken = jwt.sign(
-    { id: user._id, username: user.username },
+    { id: user._id, username: user.username, isadmin: user.isAdmin },
     process.env.JWT_SECRET
   );
   // cookies options
@@ -106,7 +106,7 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
     next(errorHandler(500, "Error while creating user"));
   }
   const accessToken = jwt.sign(
-    { id: newUser._id, username: newUser.username },
+    { id: newUser._id, username: newUser.username, isadmin: newUser.isAdmin },
     process.env.JWT_SECRET
   );
   const options = {
