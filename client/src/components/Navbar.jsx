@@ -7,12 +7,28 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {toggleTheme} from "../features/theme/themeSlice.js"
+import axios from "axios";
+import { logoutSuccess } from "../features/user/userSlice.js";
+import { useNavigate } from "react-router-dom";
 function NavbarPage() {
   const dispatch = useDispatch()
+  const navigate = useNavigate();
+  
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  console.log(currentUser);
+  // console.log(currentUser);
+  const handlelogOut = async () => {
+    try {
+      const res = await axios.get("/api/v1/auth/sign-out");
+      if (res.data.success) {
+        dispatch(logoutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <Navbar className="border-b-2">
@@ -63,7 +79,7 @@ function NavbarPage() {
                     <Dropdown.Item>Profile</Dropdown.Item>
                   </Link>
                   <DropdownDivider/>
-                  <Dropdown.Item>Sign out</Dropdown.Item>
+                  <Dropdown.Item onClick={handlelogOut}>Sign out</Dropdown.Item>
               </Dropdown>
             </>
           ) : (

@@ -3,8 +3,14 @@ import { Sidebar } from "flowbite-react";
 import { HiUser, HiArrowSmRight } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { logoutSuccess } from "../features/user/userSlice";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function DashSidebar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState("");
   useEffect(() => {
@@ -14,6 +20,17 @@ function DashSidebar() {
       setTab(tabFromurl);
     }
   }, [location.search]);
+  const handlelogOut = async () => {
+    try {
+      const res = await axios.get("/api/v1/auth/sign-out");
+      if (res.data.success) {
+        dispatch(logoutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Sidebar className="w-full md:w-56" aria-label="Sidebar">
       <Sidebar.Items>
@@ -28,8 +45,8 @@ function DashSidebar() {
             Profile
           </Sidebar.Item>
 
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
-            Sign Out
+          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" onClick={handlelogOut}>
+           Sign out
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
