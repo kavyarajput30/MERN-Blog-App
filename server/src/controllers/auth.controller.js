@@ -133,7 +133,7 @@ const signout = wrapAsync(async (req, res, next) => {
   return res
     .status(200)
     .clearCookie("accessToken", options)
-    .json(new APIResponce(200, "User logout Sucessfully"));
+    .json(new APIResponce(200, "User logout Sucessfully", null, true));
 });
 
 export { signup, signin, googleSignIn, signout };

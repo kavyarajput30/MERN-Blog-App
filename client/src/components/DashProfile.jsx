@@ -17,10 +17,11 @@ import {
   deleteUserFailure,
   deleteUserSuccess,
   deleteUserStart,
+  logoutSuccess,
 } from "../features/user/userSlice";
 import "react-circular-progressbar/dist/styles.css";
 import { Modal } from "flowbite-react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function DashProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -120,6 +121,17 @@ function DashProfile() {
     }
   };
 
+  const handlelogOut = async () => {
+    try {
+      const res = await axios.get("/api/v1/auth/sign-out");
+      if (res.data.success) {
+        dispatch(logoutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -204,15 +216,22 @@ function DashProfile() {
         >
           Delete Account
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={handlelogOut}>
+          Sign Out
+        </span>
       </div>
-      <Modal popup size="md"show={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
-        <Modal.Header>
-          Are You Sure you Want to Delete?
-        </Modal.Header>
+      <Modal
+        popup
+        size="md"
+        show={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+      >
+        <Modal.Header>Are You Sure you Want to Delete?</Modal.Header>
 
         <Modal.Footer>
-          <Button color="failure" onClick={handleDeleteUser}>Yes, Delete</Button>
+          <Button color="failure" onClick={handleDeleteUser}>
+            Yes, Delete
+          </Button>
           <Button color="gray" onClick={() => setOpenDeleteModal(false)}>
             No, Cancel
           </Button>
