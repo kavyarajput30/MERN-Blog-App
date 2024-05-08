@@ -22,6 +22,7 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 function DashProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -206,6 +207,11 @@ function DashProfile() {
         >
           Update
         </Button>
+        {currentUser?.isAdmin && (
+          <Button gradientDuoTone="purpleToPink" as={Link} to="/create-post">
+            Create a Post
+          </Button>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-6">
         <span

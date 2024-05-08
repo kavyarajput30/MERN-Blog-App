@@ -7,7 +7,9 @@ import Dashboard from "./pages/Dashboard.jsx";
 import NavbarPage from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { Routes, Route } from "react-router-dom";
+import CreatePost from "./pages/CreatePost.jsx";
 import axios from "axios";
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx"
 import PrivateRoute from "./components/PrivateRoute.jsx";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
@@ -22,6 +24,9 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path="/create-post" element={<CreatePost />} />
         </Route>
         <Route path="/project" element={<Project />} />
       </Routes>
