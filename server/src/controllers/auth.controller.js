@@ -95,7 +95,7 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
   const hashedpass = bcryptjs.hashSync(generatedPassword, 10);
   const newUser = await User.create({
     username:
-    name.toLowerCase().split(" ").join("") +
+      name.toLowerCase().split(" ").join("") +
       Math.random().toString(9).slice(-4),
     email,
     password: hashedpass,
@@ -120,5 +120,20 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
     .json(new APIResponce(200, "User created successfully", newUser, true));
 });
 
+const signout = wrapAsync(async (req, res, next) => {
+  const { accessToken } = req.cookies;
+  if (!accessToken) {
+    return next(errorHandler(401, "User is already signed out"));
+  }
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
 
-export { signup, signin, googleSignIn };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .json(new APIResponce(200, "User logout Sucessfully"));
+});
+
+export { signup, signin, googleSignIn, signout };
