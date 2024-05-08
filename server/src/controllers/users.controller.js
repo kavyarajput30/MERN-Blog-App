@@ -51,4 +51,20 @@ const updateUser = wrapAsync(async (req, res, next) => {
   res.status(200).json(new APIResponce(200, "User Updated", updateduser, true));
 });
 
-export { usertest, updateUser };
+
+
+const deleteUser = wrapAsync(async (req, res, next) => {
+  const { userId } = req.params;
+  if(!userId){
+    return next(errorHandler(400, "Login first"));
+  }
+  if(userId !== req.user.id){
+    return next(errorHandler(403, "You can only delete your account"));
+  }
+  const deleteduser = await User.findByIdAndDelete(userId);
+  if(!deleteduser){
+    return next(errorHandler(404, "User not deleted"));
+  }
+  res.status(200).json(new APIResponce(200, "User Deleted", deleteduser, true));p
+})
+export { usertest, updateUser,deleteUser };

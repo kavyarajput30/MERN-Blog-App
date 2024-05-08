@@ -67,7 +67,7 @@ const signin = wrapAsync(async (req, res, next) => {
   res
     .status(200)
     .cookie("accessToken", accessToken, options)
-    .json(new APIResponce(200, "User created successfully", user, true));
+    .json(new APIResponce(200, "User Logged In successfully", user, true));
 });
 
 const googleSignIn = wrapAsync(async (req, res, next) => {
