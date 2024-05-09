@@ -18,10 +18,12 @@ app.use(cookieParser());
 
 // import user routes
 import UserRouter from "./routes/users.route.js";
-import Authrouter from "./routes/auth.route.js";
+import AuthRouter from "./routes/auth.route.js";
+import PostRouter from "./routes/post.route.js";
 
 app.use("/api/v1/user", UserRouter);
-app.use("/api/v1/auth", Authrouter);
+app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/post", PostRouter);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
