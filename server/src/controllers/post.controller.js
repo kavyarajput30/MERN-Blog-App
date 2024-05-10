@@ -7,10 +7,14 @@ import APIResponce from "../utils/APIresponce.js";
 import Post from "../models/Post.model.js";
 
 const createPost = wrapAsync(async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return next(errorHandler(403, "you are not allowed to create a post"));
-  }
+  // console.log(req.body);
 
+  // if (req.user.isAdmin === true) {
+  //   console.log(req.user);
+  // }else{
+  //   return next(errorHandler(403, "You are not allowed to create a post"));
+  // }
+  // console.log(req.user);
   const { title, content, image, category } = req.body;
   if (!title || !content) {
     return next(errorHandler(400, "All Fields are required"));
@@ -29,10 +33,11 @@ const createPost = wrapAsync(async (req, res, next) => {
     slug,
     author: req.user.id,
   });
+
   if (!newPost) {
     return next(errorHandler(500, "Post Creation Failed"));
   }
-
+  // console.log("Post Created",newPost );
   return res
     .status(200)
     .json(new APIResponce(200, "Post Created Successfully", newPost, true));
