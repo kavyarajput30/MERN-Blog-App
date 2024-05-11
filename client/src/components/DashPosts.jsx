@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
+  const [showmore, setShowMore] = useState(true);
   const ftechPosts = async () => {
     try {
       const res = await axios.get(
@@ -14,11 +15,29 @@ function DashPosts() {
       if (res.data.success) {
         console.log(res.data.data.posts);
         setPosts(res.data.data.posts);
+        if (res.data.data.posts.length < 9) {
+          setShowMore(true);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   };
+  const handleShowMore = async () =>{
+   const startIdx = posts.length;
+   try{
+
+       const res = await axios.get(`/api/v1/post/get-posts?author=${currentUser._id}&startIndex=${startIdx}`);
+       if(res.data.success){
+        if(res.data.data.posts.length < 9){
+            setShowMore(false);
+        }
+        setPosts([...posts, ...res.data.data.posts]);
+       }
+   }catch(err){
+       console.log(err);
+   }
+  }
   useEffect(() => {
     if (currentUser.isAdmin) {
       ftechPosts();
@@ -82,6 +101,16 @@ function DashPosts() {
               </Table.Body>
             ))}
           </Table>
+          {showmore && (
+            <div className="text-center p-5">
+              <button
+                onClick={handleShowMore}
+                className="text-teal-500 hover:underline w-full"
+              >
+                Show More
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <p> You Have No posts yet</p>
