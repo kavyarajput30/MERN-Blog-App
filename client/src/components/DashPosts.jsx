@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Table } from "flowbite-react";
+import { Table, Modal, Button } from "flowbite-react";
 import { Link } from "react-router-dom";
 function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [showmore, setShowMore] = useState(true);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [postToBeDeleted, setPostToBeDeleted] = useState(null);
   const ftechPosts = async () => {
     try {
       const res = await axios.get(
         `/api/v1/post/get-posts?author=${currentUser._id}`
       );
       if (res.data.success) {
-        console.log(res.data.data.posts);
         setPosts(res.data.data.posts);
         if (res.data.data.posts.length < 9) {
           setShowMore(true);
@@ -23,27 +24,49 @@ function DashPosts() {
       console.log(err);
     }
   };
-  const handleShowMore = async () =>{
-   const startIdx = posts.length;
-   try{
-
-       const res = await axios.get(`/api/v1/post/get-posts?author=${currentUser._id}&startIndex=${startIdx}`);
-       if(res.data.success){
-        if(res.data.data.posts.length < 9){
-            setShowMore(false);
+  const handleShowMore = async () => {
+    const startIdx = posts.length;
+    try {
+      const res = await axios.get(
+        `/api/v1/post/get-posts?author=${currentUser._id}&startIndex=${startIdx}`
+      );
+      if (res.data.success) {
+        if (res.data.data.posts.length < 9) {
+          setShowMore(false);
         }
         setPosts([...posts, ...res.data.data.posts]);
-       }
-   }catch(err){
-       console.log(err);
-   }
-  }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleDeletePost = async (postid) => {
+    console.log(postid);
+    setOpenDeleteModal(false);
+
+    try {
+      const res = await axios.delete(
+        `/api/v1/post/delete-post/${postid}/${currentUser._id}`
+      );
+
+      if(res.data.success){
+        console.log(res);
+        setPosts(posts.filter(post => post._id !== res.data.data._id));
+      }
+    } catch (err) {
+        if(err.response){
+            console.log(err.response.data.message);
+        }
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (currentUser.isAdmin) {
       ftechPosts();
     }
   }, [currentUser._id]);
-//   console.log(posts.length);
+  //   console.log(posts.length);
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && posts.length > 0 ? (
@@ -61,7 +84,7 @@ function DashPosts() {
               </Table.HeadCell>
             </Table.Head>
             {posts.map((post) => (
-              <Table.Body className="divide-y">
+              <Table.Body className="divide-y" key={post._id}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}
@@ -85,7 +108,13 @@ function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
-                    <span className="font-medium text-red-500 hover:underline cursor-pointer">
+                    <span
+                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                      onClick={() => {
+                        setOpenDeleteModal(true);
+                        setPostToBeDeleted(post._id);
+                      }}
+                    >
                       Delete
                     </span>
                   </Table.Cell>
@@ -115,6 +144,29 @@ function DashPosts() {
       ) : (
         <p> You Have No posts yet</p>
       )}
+      <Modal
+        popup
+        size="md"
+        show={openDeleteModal}
+        onClose={() => setOpenDeleteModal(false)}
+      >
+        <Modal.Header>Are You Sure?</Modal.Header>
+        <Modal.Body>
+          <p>You want to delete this post</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            color="failure"
+            onClick={() => handleDeletePost(postToBeDeleted)}
+          >
+            Yes, Delete
+          </Button>
+          <Button color="gray" onClick={() => setOpenDeleteModal(false)}>
+            No, Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

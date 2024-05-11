@@ -9,12 +9,12 @@ import Post from "../models/Post.model.js";
 const createPost = wrapAsync(async (req, res, next) => {
   // console.log(req.body);
 
-  // if (req.user.isAdmin === true) {
-  //   console.log(req.user);
-  // }else{
-  //   return next(errorHandler(403, "You are not allowed to create a post"));
-  // }
-  // console.log(req.user);
+  if (req.user.isAdmin === true) {
+    console.log(req.user);
+  }else{
+    return next(errorHandler(403, "You are not allowed to create a post"));
+  }
+  console.log(req.user);
   const { title, content, image, category } = req.body;
   if (!title || !content) {
     return next(errorHandler(400, "All Fields are required"));
@@ -103,7 +103,7 @@ const getAllPosts = wrapAsync(async (req, res, next) => {
 const deletePost = wrapAsync(async (req, res, next) => {
   const { userId, postId } = req.params;
   const currentuserid = req.user.id;
-
+console.log(req.user);
   if (!req.user.isAdmin) {
     return next(errorHandler(401, "You are not Admin"));
   }

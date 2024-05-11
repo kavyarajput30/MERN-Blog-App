@@ -9,7 +9,7 @@ function Dashboard() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromurl = urlParams.get("tab");
-    console.log(tabFromurl);
+    // console.log(tabFromurl);
     if (tabFromurl) {
       setTab(tabFromurl);
     }
