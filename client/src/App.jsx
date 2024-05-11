@@ -11,6 +11,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import axios from "axios";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx"
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import UpdatePost from "./pages/UpdatePost.jsx"
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
   axios.defaults.withCredentials = true;
@@ -27,6 +28,8 @@ function App() {
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/update-post/:postId" element={<UpdatePost />} />
+
         </Route>
         <Route path="/project" element={<Project />} />
       </Routes>

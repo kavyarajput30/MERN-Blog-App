@@ -11,7 +11,7 @@ const createPost = wrapAsync(async (req, res, next) => {
 
   if (req.user.isAdmin === true) {
     console.log(req.user);
-  }else{
+  } else {
     return next(errorHandler(403, "You are not allowed to create a post"));
   }
   console.log(req.user);
@@ -103,7 +103,7 @@ const getAllPosts = wrapAsync(async (req, res, next) => {
 const deletePost = wrapAsync(async (req, res, next) => {
   const { userId, postId } = req.params;
   const currentuserid = req.user.id;
-console.log(req.user);
+  console.log(req.user);
   if (!req.user.isAdmin) {
     return next(errorHandler(401, "You are not Admin"));
   }
@@ -111,16 +111,44 @@ console.log(req.user);
     return next(errorHandler(400, "You are not authorized to delete post"));
   }
 
-
-   const deletedPost = await Post.findByIdAndDelete(postId);
-   if(!deletedPost){
+  const deletedPost = await Post.findByIdAndDelete(postId);
+  if (!deletedPost) {
     return next(errorHandler(400, "Post deletion Failed"));
-   }
+  }
 
-   return res.status(200).json(new APIResponce(200, "Post Deleted", deletedPost, true));
-
-
-
-
+  return res
+    .status(200)
+    .json(new APIResponce(200, "Post Deleted", deletedPost, true));
 });
-export { createPost, getAllPosts, deletePost };
+const updatePost = wrapAsync(async (req, res, next) => {
+  const { userId, postId } = req.params;
+  const currentuserid = req.user.id;
+
+  if (!req.user.isAdmin) {
+    return next(errorHandler(401, "You are not Admin"));
+  }
+  if (userId !== currentuserid) {
+    return next(errorHandler(400, "You are not authorized to update post"));
+  }
+
+  const { title, content, image, category } = req.body;
+  const updatedPost = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $set: {
+        title,
+        content,
+        image,
+        category,
+      },
+    },
+    { new: true }
+  );
+  if (!updatedPost) {
+    return next(errorHandler(400, "Post Updation Failed"));
+  }
+  return res
+    .status(200)
+    .json(new APIResponce(200, "Post Updated", updatedPost, true));
+});
+export { createPost, getAllPosts, deletePost, updatePost };

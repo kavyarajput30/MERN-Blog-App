@@ -41,7 +41,7 @@ function DashPosts() {
     }
   };
   const handleDeletePost = async (postid) => {
-    console.log(postid);
+    // console.log(postid);
     setOpenDeleteModal(false);
 
     try {
