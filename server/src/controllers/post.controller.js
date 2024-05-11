@@ -47,8 +47,7 @@ const getAllPosts = wrapAsync(async (req, res, next) => {
   const startIndex = parseInt(req.query.startIndex) || 0;
   const limit = parseInt(req.query.limit) || 9;
   const sortDirection = req.query.order === "asc" ? 1 : -1;
-  const posts = await Post.find(
-    {
+  const posts = await Post.find({
     ...(req.query.author && { author: req.query.author }),
     ...(req.query.category && { category: req.query.category }),
     ...(req.query.slug && { slug: req.query.slug }),
@@ -68,10 +67,8 @@ const getAllPosts = wrapAsync(async (req, res, next) => {
           },
         },
       ],
-    
-    })
-  }
-  )
+    }),
+  })
     .sort({ updatedAt: sortDirection })
     .skip(startIndex)
     .limit(limit);
@@ -102,4 +99,28 @@ const getAllPosts = wrapAsync(async (req, res, next) => {
     )
   );
 });
-export { createPost, getAllPosts };
+
+const deletePost = wrapAsync(async (req, res, next) => {
+  const { userId, postId } = req.params;
+  const currentuserid = req.user.id;
+
+  if (!req.user.isAdmin) {
+    return next(errorHandler(401, "You are not Admin"));
+  }
+  if (userId !== currentuserid) {
+    return next(errorHandler(400, "You are not authorized to delete post"));
+  }
+
+
+   const deletedPost = await Post.findByIdAndDelete(postId);
+   if(!deletedPost){
+    return next(errorHandler(400, "Post deletion Failed"));
+   }
+
+   return res.status(200).json(new APIResponce(200, "Post Deleted", deletedPost, true));
+
+
+
+
+});
+export { createPost, getAllPosts, deletePost };
