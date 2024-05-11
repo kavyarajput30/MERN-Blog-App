@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Project from "./pages/Project.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import UpdatePost from "./pages/UpdatePost.jsx";
 import NavbarPage from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import { Routes, Route } from "react-router-dom";
@@ -11,7 +12,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import axios from "axios";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx"
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import UpdatePost from "./pages/UpdatePost.jsx"
+
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
   axios.defaults.withCredentials = true;

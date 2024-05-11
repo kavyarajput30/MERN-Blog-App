@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 function DashSidebar() {
-  const {currentUser} = useSelector((state) => state.user)
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,20 +45,34 @@ function DashSidebar() {
           >
             Profile
           </Sidebar.Item>
-{currentUser?.isAdmin && (
-     <Sidebar.Item
-     href="/dashboard?tab=posts"
-     active={tab === "posts"}
-     icon={HiDocumentText}
-     labelColor="dark"
-   >
-     Posts
-   </Sidebar.Item>
-)}
-       
+          {currentUser?.isAdmin && (
+            <Sidebar.Item
+              href="/dashboard?tab=posts"
+              active={tab === "posts"}
+              icon={HiDocumentText}
+              labelColor="dark"
+            >
+              Posts
+            </Sidebar.Item>
+          )}
+           {currentUser?.isAdmin && (
+            <Sidebar.Item
+              href="/dashboard?tab=users"
+              active={tab === "users"}
+              icon={HiDocumentText}
+              labelColor="dark"
+            >
+              Users
+            </Sidebar.Item>
+          )}
 
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" onClick={handlelogOut}>
-           Sign out
+
+          <Sidebar.Item
+            icon={HiArrowSmRight}
+            className="cursor-pointer"
+            onClick={handlelogOut}
+          >
+            Sign out
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
