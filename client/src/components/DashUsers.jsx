@@ -13,7 +13,7 @@ function DashUsers() {
   const ftechusers = async () => {
     try {
       const res = await axios.get(`/api/v1/user/get-users`);
-      console.log(res);
+    //   console.log(res);
       if (res.data.success) {
         setUsers(res.data.data.allUsers);
         if (res.data.data.allUsers.length < 9) {
@@ -46,7 +46,7 @@ function DashUsers() {
 
     try {
       const res = await axios.delete(
-        `/api/v1/user/delete-user/${userid}/${currentUser._id}`
+        `/api/v1/user/delete/${userToBeDeleted}`
       );
 
       if (res.data.success) {

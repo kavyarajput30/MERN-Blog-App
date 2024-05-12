@@ -63,9 +63,13 @@ const deleteUser = wrapAsync(async (req, res, next) => {
   if (!userId) {
     return next(errorHandler(400, "Login first"));
   }
-  if (userId !== req.user.id) {
-    return next(errorHandler(403, "You can only delete your account"));
+  if(!req.user.isAdmin){
+    return next(errorHandler(401, "You are not Admin"));
   }
+
+  // if (userId !== req.user.id) {
+  //   return next(errorHandler(403, "You can only delete your account"));
+  // }
   const deleteduser = await User.findByIdAndDelete(userId);
   if (!deleteduser) {
     return next(errorHandler(404, "User not deleted"));
