@@ -1,6 +1,6 @@
 import React from "react";
 import { Sidebar } from "flowbite-react";
-import { HiUser, HiArrowSmRight, HiDocumentText } from "react-icons/hi";
+import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { logoutSuccess } from "../features/user/userSlice";
@@ -59,7 +59,7 @@ function DashSidebar() {
             <Sidebar.Item
               href="/dashboard?tab=users"
               active={tab === "users"}
-              icon={HiDocumentText}
+              icon={HiOutlineUserGroup}
               labelColor="dark"
             >
               Users
