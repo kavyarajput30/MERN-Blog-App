@@ -6,18 +6,22 @@ import axios from "axios";
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
-  console.log(currentUser);
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-     const res = await axios.post(`/posts/${postId}/comment`, {
-        comment,
+      const res = await axios.post(`/api/v1/comment/new-comment`, {
+        content: comment,
+    userId: currentUser._id,
+    postId: postId,
       });
-      console.log(data);
+      if (res.data.success) {
+        console.log(res.data.data);
+        setComment("");
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
@@ -45,8 +49,17 @@ function CommentSection({ postId }) {
         </div>
       )}
       {currentUser && (
-        <form onSubmit={handleAddComment} className="border border-teal-500 rounded-md p-3">
-          <Textarea placeholder="Add a comment..." rows="3" maxLength="200" value={comment} onChange={(e) => setComment(e.target.value)} />
+        <form
+          onSubmit={handleAddComment}
+          className="border border-teal-500 rounded-md p-3"
+        >
+          <Textarea
+            placeholder="Add a comment..."
+            rows="3"
+            maxLength="200"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
           <div className="flex justify-between items-center mt-5">
             <p className="text-gray-500 text-xs">
               {200 - comment.length} characters remaining
