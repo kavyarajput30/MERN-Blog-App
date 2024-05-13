@@ -20,11 +20,11 @@ app.use(cookieParser());
 import UserRouter from "./routes/users.route.js";
 import AuthRouter from "./routes/auth.route.js";
 import PostRouter from "./routes/post.route.js";
-
+import CommentRouter from "./routes/comment.route.js";
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/post", PostRouter);
-
+app.use("/api/v1/comment", CommentRouter);
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong";
