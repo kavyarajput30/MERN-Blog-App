@@ -12,6 +12,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import axios from "axios";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx"
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import PostPage from "./pages/PostPage.jsx";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
@@ -27,12 +28,13 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
-        <Route element={<OnlyAdminPrivateRoute />}>
+        <Route element={<OnlyAdminPrivateRoute />} >
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:postId" element={<UpdatePost />} />
 
         </Route>
         <Route path="/project" element={<Project />} />
+        <Route path="post/:postSlug" element={<PostPage />}/>
       </Routes>
       <Footer />
     </>
