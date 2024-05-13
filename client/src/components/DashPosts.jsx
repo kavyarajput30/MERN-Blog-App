@@ -15,6 +15,7 @@ function DashPosts() {
         `/api/v1/post/get-posts?author=${currentUser._id}`
       );
       if (res.data.success) {
+        console.log(res.data.data.posts);
         setPosts(res.data.data.posts);
         if (res.data.data.posts.length < 9) {
           setShowMore(true);
@@ -50,7 +51,7 @@ function DashPosts() {
       );
 
       if(res.data.success){
-        console.log(res);
+        // console.log(res);
         setPosts(posts.filter(post => post._id !== res.data.data._id));
       }
     } catch (err) {
