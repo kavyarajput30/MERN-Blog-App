@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
+import CallToAction from "../components/CallToAction";
 function PostPage() {
   const { postSlug } = useParams();
   const [post, setPost] = useState({});
@@ -50,9 +51,16 @@ function PostPage() {
           </span>
         </div>
       </div>
-      <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{ __html: post.content }}>
+      <div
+        className="p-3 max-w-2xl mx-auto w-full post-content"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      >
 
       </div>
+      <div className="max-w-4xl mx-auto w-full">
+        <CallToAction />
+      </div>
+
     </>
   );
 }
