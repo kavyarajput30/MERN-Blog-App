@@ -1,18 +1,20 @@
 import { Button, TextInput, Textarea } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import Comment from "./Comment.jsx";
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(`/api/v1/comment/new-comment`, {
         content: comment,
-    userId: currentUser._id,
-    postId: postId,
+        userId: currentUser._id,
+        postId: postId,
       });
       if (res.data.success) {
         console.log(res.data.data);
@@ -22,6 +24,20 @@ function CommentSection({ postId }) {
       console.log(error);
     }
   };
+  const fetchInitialComments = async () => {
+    try {
+      const res = await axios.get(`/api/v1/comment/get-comments/${postId}`);
+      if (res.data.success) {
+        console.log(res.data.data);
+        setAllComments(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchInitialComments();
+  }, [postId]);
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
@@ -70,6 +86,25 @@ function CommentSection({ postId }) {
           </div>
         </form>
       )}
+
+      <div>
+        {allComments.length === 0 && (
+          <p className="text-sm my-5">Be the first to comment!</p>
+        )}
+        <div>
+          <div className="text-sm my-5 flex flex-col gap-1">
+            <div>
+              <span>Comments </span>
+              <span className="border border-gray-400 py-1 px-2 rounded-sm">
+                {allComments.length}
+              </span>
+            </div>
+            {allComments.map((comment) => (
+              <Comment key={comment._id} comment={comment} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
