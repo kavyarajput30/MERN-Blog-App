@@ -2,10 +2,22 @@ import { Button, TextInput, Textarea } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   console.log(currentUser);
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    try {
+     const res = await axios.post(`/posts/${postId}/comment`, {
+        comment,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
