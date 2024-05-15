@@ -1,6 +1,7 @@
 import React from "react";
-import moment from 'moment';
-function Comment({ comment }) {
+import moment from "moment";
+import { FaThumbsUp } from "react-icons/fa";
+function Comment({ comment, onLike }) {
   console.log(comment);
   return (
     <div className="flex border-b dark:border-gray-600 text-sm p-4">
@@ -16,11 +17,21 @@ function Comment({ comment }) {
           <span className="font-bold mr-1 text-xs truncate">
             @{comment.userId.username}
           </span>
-          <span className="text-gray-500 text-xs">{moment(comment.createdAt).fromNow()}</span>
+          <span className="text-gray-500 text-xs">
+            {moment(comment.createdAt).fromNow()}
+          </span>
         </div>
-        <p className="text-gray-500 pb-2">
-            {comment.content}
-        </p>
+        <p className="text-gray-500 pb-2">{comment.content}</p>
+        <div className="">
+          <button
+            type="button"
+            onClick={() => onLike(comment._id)}
+            className="text-gray-400 hover:text-blue-500"
+          >
+            <FaThumbsUp className="text-sm" />
+          </button>
+          <p>{comment.numberOfLikes}</p>
+        </div>
       </div>
     </div>
   );

@@ -58,4 +58,32 @@ const getAllCommensts = wrapAsync(async (req, res, next) => {
     );
 });
 
-export { createNewComment, getAllCommensts };
+const likeComment = wrapAsync(async (req, res, next) => {
+  const { commentId } = req.params;
+  const { userId } = req.body;
+  // console.log(userId);
+  const currentuserid = req.user.id;
+  // console.log(currentuserid);
+  if(userId !== currentuserid){
+    return next(errorHandler(400, "Like with your account"));
+  }
+
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    return next(errorHandler(400, "Comment not found"));
+  }
+
+  if (!comment.likes.includes(userId)) {
+    comment.likes.push(userId);
+  }else if(comment.likes.includes(userId)){
+    comment.likes = comment.likes.filter((id) => id !== userId);
+  }
+   
+  comment.numberOfLikes = comment.likes.length;
+  const updatedComment = await comment.save();
+  return res.status(200).json(new APIResponce(200, "Comment updated", updatedComment, true));
+
+})
+
+export { createNewComment, getAllCommensts,likeComment };

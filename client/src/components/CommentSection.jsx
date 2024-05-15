@@ -1,6 +1,6 @@
 import { Button, TextInput, Textarea } from "flowbite-react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Comment from "./Comment.jsx";
@@ -8,6 +8,7 @@ function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
+  const navigate = useNavigate();
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
@@ -33,6 +34,23 @@ function CommentSection({ postId }) {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+  const handleLike = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await axios.patch(`api/v1/comment/like-comment/${commentId}`,{
+        userId:currentUser._id
+      });
+      if (res.data.success) {
+        console.log(res.data.data);
+        fetchInitialComments();
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   useEffect(() => {
@@ -100,7 +118,11 @@ function CommentSection({ postId }) {
               </span>
             </div>
             {allComments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment
+                key={comment._id}
+                comment={comment}
+                onLike={handleLike}
+              />
             ))}
           </div>
         </div>
