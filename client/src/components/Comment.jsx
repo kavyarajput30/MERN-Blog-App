@@ -20,10 +20,8 @@ function Comment({ comment, onLike }) {
         `api/v1/comment/edit-comment/${comment._id}`,
         {
           content,
-          userId: currentUser._id,
         }
       );
-
       comment.content = res.data.data.content;
       console.log(res.data);
       setIsEditing(false);

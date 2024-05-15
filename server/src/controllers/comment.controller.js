@@ -87,22 +87,18 @@ const likeComment = wrapAsync(async (req, res, next) => {
 
 const editComment = wrapAsync(async (req, res, next) => {
   const { commentId } = req.params;
-  const { userId } = req.body;
   const currentuserid = req.user.id;
   const { content } = req.body;
   console.log(req.body);
   if (!content) {
     return next(errorHandler(400, "Content is required"));
   }
-  if (userId !== currentuserid) {
-    return next(errorHandler(400, "Edit with your account"));
-  }
 
   const comment = await Comment.findById(commentId);
   if (!comment) {
     return next(errorHandler(400, "Comment not found"));
   }
-  if (comment.userId != userId && !req.user.isAdmin) {
+  if (comment.userId !== currentuserid && !req.user.isAdmin) {
     return next(errorHandler(400, "You can only edit your comment"));
   }
 
