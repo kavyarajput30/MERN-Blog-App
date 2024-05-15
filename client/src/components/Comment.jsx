@@ -24,26 +24,23 @@ function Comment({ comment, onLike }) {
           </span>
         </div>
         <p className="text-gray-500 pb-2">{comment.content}</p>
-        <div className="">
-          {comment.likes.includes(currentUser._id) ? (
-            <button
-              type="button"
-              onClick={() => onLike(comment._id)}
-              className="text-blue-500 hover:text-red-500"
-            >
-              <FaThumbsUp className="text-sm" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => onLike(comment._id)}
-              className="text-gray-400 hover:text-red-500"
-            >
-              <FaThumbsUp className="text-sm" />
-            </button>
-          )}
+        <div className="flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2">
+          <button
+            type="button"
+            onClick={() => onLike(comment._id)}
+            className={`text-${
+              comment.likes.includes(currentUser._id) ? "blue-500" : "gray-400"
+            } hover:text-red-500`}
+          >
+            <FaThumbsUp className="text-sm" />
+          </button>
 
-          <p>{comment.numberOfLikes}</p>
+          <p className="text-gray-400">
+            {comment.numberOfLikes}{" "}
+            {comment.numberOfLikes === 0 || comment.numberOfLikes === 1
+              ? "like"
+              : "likes"}
+          </p>
         </div>
       </div>
     </div>
