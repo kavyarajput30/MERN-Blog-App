@@ -55,10 +55,20 @@ function Comment({ comment, onLike }) {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="mb-2"
+              rows="3"
             ></Textarea>
             <div className="flex gap-2">
-              <Button onClick={handleEditSubmit} gradientDuoTone="purpleToBlue" outline>Save</Button>
-              <Button onClick={() => setIsEditing(false)} color="gray">Cancel</Button>
+              <Button
+                onClick={handleEditSubmit}
+                gradientDuoTone="purpleToBlue"
+                outline
+                size="sm"
+              >
+                Save
+              </Button>
+              <Button onClick={() => setIsEditing(false)} color="gray" size="sm">
+                Cancel
+              </Button>
             </div>
           </>
         ) : (
