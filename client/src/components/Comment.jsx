@@ -35,7 +35,7 @@ function Comment({ comment, onLike }) {
      const res = await axios.delete(`api/v1/comment/delete-comment/${comment._id}`);
      if(res.data.success){
       setModelOpen(false);
-      
+
      }
     }catch(err){
       console.log(err);
@@ -123,7 +123,7 @@ function Comment({ comment, onLike }) {
                   <button
                     type="button"
                     onClick={() => setModelOpen(true)}
-                    className="text-gray-400 hover:text-blue-500"
+                    className="text-gray-400 hover:text-red-500"
                   >
                     Delete
                   </button>
