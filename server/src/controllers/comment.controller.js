@@ -110,4 +110,19 @@ const editComment = wrapAsync(async (req, res, next) => {
     .json(new APIResponce(200, "Comment updated", updatedComment, true));
 });
 
-export { createNewComment, getAllCommensts, likeComment, editComment };
+const deleteComment = wrapAsync(async (req, res, next) => {
+  const { commentId } = req.params;
+  const currentuserid = req.user.id;
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    return next(errorHandler(400, "Comment not found"));
+  }
+  if(comment.userId !== currentuserid && !req.user.isAdmin){
+    return next(errorHandler(400, "You can only delete your comment"));
+  }
+
+  const deletedComment = await Comment.findByIdAndDelete(commentId);
+  return res.status(200).json(new APIResponce(200, "Comment deleted", deletedComment, true));
+})
+export { createNewComment, getAllCommensts, likeComment, editComment,deleteComment };

@@ -3,13 +3,14 @@ import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Button, TextInput, Textarea } from "flowbite-react";
+import { Button, Modal, Textarea } from "flowbite-react";
 function Comment({ comment, onLike }) {
   const { currentUser } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
+  const [openModel, setModelOpen] = useState(false);
   // console.log(comment);
   const [content, setContent] = useState("");
-  console.log(content);
+  // console.log(content);
   const handleEdit = () => {
     setIsEditing(true);
     setContent(comment.content);
@@ -29,6 +30,17 @@ function Comment({ comment, onLike }) {
       console.log(err);
     }
   };
+  const handleDeleteComment = async () => {
+    try {
+     const res = await axios.delete(`api/v1/comment/delete-comment/${comment._id}`);
+     if(res.data.success){
+      setModelOpen(false);
+      
+     }
+    }catch(err){
+      console.log(err);
+    }
+  }
   return (
     <div className="flex border-b dark:border-gray-600 text-sm p-4">
       <div className="flex-shrink-0 mr-3">
@@ -64,7 +76,11 @@ function Comment({ comment, onLike }) {
               >
                 Save
               </Button>
-              <Button onClick={() => setIsEditing(false)} color="gray" size="sm">
+              <Button
+                onClick={() => setIsEditing(false)}
+                color="gray"
+                size="sm"
+              >
                 Cancel
               </Button>
             </div>
@@ -101,10 +117,44 @@ function Comment({ comment, onLike }) {
                     Edit
                   </button>
                 )}
+
+              {currentUser &&
+                (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                  <button
+                    type="button"
+                    onClick={() => setModelOpen(true)}
+                    className="text-gray-400 hover:text-blue-500"
+                  >
+                    Delete
+                  </button>
+                )}
             </div>
           </>
         )}
       </div>
+      <Modal
+        popup
+        size="md"
+        show={openModel}
+        onClose={() => setModelOpen(false)}
+      >
+        <Modal.Header>Are You Sure?</Modal.Header>
+        <Modal.Body>
+          <p>You want to delete this post</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            color="failure"
+            onClick={handleDeleteComment}
+          >
+            Yes, Delete
+          </Button>
+          <Button color="gray" onClick={() => setModelOpen(false)}>
+            No, Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
