@@ -8,6 +8,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { HiChartPie } from "react-icons/hi2";
 function DashSidebar() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -65,6 +66,17 @@ function DashSidebar() {
               Users
             </Sidebar.Item>
           )}
+            {currentUser?.isAdmin && (
+            <Sidebar.Item
+              href="/dashboard?tab=dashboard"
+              active={tab === "dashboard" || tab === ""}
+              icon={HiChartPie}
+              labelColor="dark"
+            >
+              Dashboard
+            </Sidebar.Item>
+          )}
+
 
 
           <Sidebar.Item
