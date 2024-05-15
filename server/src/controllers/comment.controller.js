@@ -90,6 +90,7 @@ const editComment = wrapAsync(async (req, res, next) => {
   const { userId } = req.body;
   const currentuserid = req.user.id;
   const { content } = req.body;
+  console.log(req.body);
   if (!content) {
     return next(errorHandler(400, "Content is required"));
   }
