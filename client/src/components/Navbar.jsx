@@ -1,23 +1,41 @@
-import React from "react";
-import { Avatar, Button, Dropdown, DropdownDivider, Navbar, TextInput } from "flowbite-react";
+import React, { useEffect } from "react";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownDivider,
+  Navbar,
+  TextInput,
+} from "flowbite-react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import {toggleTheme} from "../features/theme/themeSlice.js"
+import { toggleTheme } from "../features/theme/themeSlice.js";
 import axios from "axios";
 import { logoutSuccess } from "../features/user/userSlice.js";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 function NavbarPage() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate();
-  
   const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
   // console.log(currentUser);
+  console.log(searchTerm);
   const handlelogOut = async () => {
     try {
       const res = await axios.get("/api/v1/auth/sign-out");
@@ -28,6 +46,13 @@ function NavbarPage() {
     } catch (err) {
       console.log(err);
     }
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('searchTerm', searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
   };
   return (
     <>
@@ -42,13 +67,15 @@ function NavbarPage() {
           Blog
         </Link>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
             placeholder="Search..."
             rightIcon={AiOutlineSearch}
             className="hidden lg:inline"
+            value={searchTerm}
             required
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
         <Button type="submit" className="w-12 h-10 lg:hidden" color="gray" pill>
@@ -69,17 +96,19 @@ function NavbarPage() {
               <Dropdown
                 arrowIcon={false}
                 inline
-                label={<Avatar alt="user"  img={currentUser.photourl} rounded/>}
+                label={<Avatar alt="user" img={currentUser.photourl} rounded />}
               >
                 <Dropdown.Header>
-                 <span className="block text-sm">@{currentUser.username}</span>
-                 <span className="block text-sm font-medium truncate">{currentUser.email}</span>
-                  </Dropdown.Header>
-                  <Link to="/dashboard?tab=profile">
-                    <Dropdown.Item>Profile</Dropdown.Item>
-                  </Link>
-                  <DropdownDivider/>
-                  <Dropdown.Item onClick={handlelogOut}>Sign out</Dropdown.Item>
+                  <span className="block text-sm">@{currentUser.username}</span>
+                  <span className="block text-sm font-medium truncate">
+                    {currentUser.email}
+                  </span>
+                </Dropdown.Header>
+                <Link to="/dashboard?tab=profile">
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                </Link>
+                <DropdownDivider />
+                <Dropdown.Item onClick={handlelogOut}>Sign out</Dropdown.Item>
               </Dropdown>
             </>
           ) : (

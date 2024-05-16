@@ -14,6 +14,7 @@ import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import PostPage from "./pages/PostPage.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import Search from "./pages/Search.jsx";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8000";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/search" element={<Search />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
