@@ -1,7 +1,7 @@
 import User from "../models/User.model.js";
 import wrapAsync from "../utils/WrapAsync.js";
 import { errorHandler } from "../utils/error.js";
-import APIResponce from "../utils/APIresponce.js";
+import APIResponce from "../utils/APIResponce.js";
 import bcryptjs from "bcryptjs";
 const usertest = (req, res) => {
   res.send("test route is working");

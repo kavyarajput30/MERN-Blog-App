@@ -3,7 +3,7 @@ import wrapAsync from "../utils/WrapAsync.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import APIResponce from "../utils/APIresponce.js";
+import APIResponce from "../utils/APIResponce.js";
 
 const signup = wrapAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
