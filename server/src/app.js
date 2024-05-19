@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 const app = express();
-
+const __dirname = path.resolve();
 app.use(
   cors({
     origin: "http://localhost:5173",
