@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "flowbite-react";
 import { Toast } from "flowbite-react";
-import { HiFire } from "react-icons/hi";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
@@ -22,7 +22,6 @@ function SignUp() {
     email: "",
     password: "",
   });
-  const [errMsg, setErrMsg] = useState(null);
   const [loading, setloading] = useState(false);
   const handleInputChange = (e) => {
     let name = e.target.name;
@@ -38,7 +37,7 @@ function SignUp() {
         .post("api/v1/auth/sign-up", data)
         .then((res) => {
           console.log(res.data);
-          setErrMsg(null);
+          toast.success("Account created successfully");
           setData({
             username: "",
             email: "",
@@ -48,10 +47,11 @@ function SignUp() {
           navigate("/sign-in");
         })
         .catch((err) => {
-          console.log(err);
+          toast.error(err.response.data.message);
+          setloading(false);
         });
     } catch (err) {
-      setErrMsg(err.message);
+      toast.error(err.response.data.message);
       console.log(err);
     }
   };
@@ -71,18 +71,6 @@ function SignUp() {
           </p>
         </div>
         <div className="flex-1">
-          {errMsg && (
-            <Toast className="bg-red-100">
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-900 dark:text-red-200">
-                <HiInformationCircle className="h-5 w-5" />
-              </div>
-              <div className="ml-3 text-sm font-normal text-red-900">
-                {errMsg}
-              </div>
-              <Toast.Toggle />
-            </Toast>
-          )}
-
           <form
             className="flex max-w-md flex-col gap-4"
             onSubmit={handleFormSubmit}
@@ -141,7 +129,7 @@ function SignUp() {
             </Button>
             <OAuth />
           </form>
-          
+
           <div className="flex gap-2 text-sm mt-5">
             <span>Already have an account?</span>
             <Link to="/sign-in" className="text-blue-500">

@@ -121,17 +121,15 @@ const deletePost = wrapAsync(async (req, res, next) => {
     .json(new APIResponce(200, "Post Deleted", deletedPost, true));
 });
 const updatePost = wrapAsync(async (req, res, next) => {
-  const { userId, postId } = req.params;
+  const {  postId } = req.params;
   const currentuserid = req.user.id;
 
   if (!req.user.isAdmin) {
     return next(errorHandler(401, "You are not Admin"));
   }
-  if (userId !== currentuserid) {
-    return next(errorHandler(400, "You are not authorized to update post"));
-  }
-
+ 
   const { title, content, image, category } = req.body;
+
   const updatedPost = await Post.findByIdAndUpdate(
     postId,
     {

@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Checkbox, Label, TextInput, Alert, Spinner, Toast } from "flowbite-react";
-import { HiInformationCircle } from "react-icons/hi";
-import {signInStart, signInSuccess, signInFailure} from "../features/user/userSlice.js"
-import { useDispatch ,useSelector} from "react-redux";
+import {
+  Button,
+  Label,
+  TextInput,
+  Spinner
+} from "flowbite-react";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../features/user/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import OAuth from "../components/OAuth.jsx";
-
+import { toast } from "react-toastify";
 function SignIn() {
- 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const {loading,error:errMsg} = useSelector((state) => state.user)
+  const { loading, error: errMsg } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleInputChange = (e) => {
     let name = e.target.name;
@@ -25,55 +32,32 @@ function SignIn() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-dispatch(signInStart())
-      const res = await fetch("http://localhost:8000/api/v1/auth/sign-in", { 
-        
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-
-        },
-        withCredentials: true,
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-
-      if (result.success == false) {
-       dispatch(signInFailure(result.message))
-      }
-      if (res.ok) {
-        dispatch(signInSuccess(result.data))
+      dispatch(signInStart());
+      const res = await axios.post("/api/v1/auth/sign-in", data);
+      console.log(res);
+     if(!res.data.success){
+      toast.error(res.data.message);
+      dispatch(signInFailure(res.data.message));
+      return;
+     }
+      if (res.data.success) {
+        dispatch(signInSuccess(res.data.data));
+        toast.success(res.data.message);
         setData({
           email: "",
           password: "",
         });
         navigate("/");
       }
-      console.log(result);
     } catch (err) {
-      dispatch(signInFailure(err.message))
+      toast.error(err.response.data.message);
+      dispatch(signInFailure(err.response.data.message));
       console.log(err);
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    return (
-        <div className="min-h-screen mt-20">
+  return (
+    <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className=" font-bold dark:text-white text-4xl">
@@ -88,18 +72,6 @@ dispatch(signInStart())
           </p>
         </div>
         <div className="flex-1">
-          {errMsg && (
-            <Toast className="bg-red-100">
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-900 dark:text-red-200">
-                <HiInformationCircle className="h-5 w-5" />
-              </div>
-              <div className="ml-3 text-sm font-normal text-red-900">
-                {errMsg}
-              </div>
-              <Toast.Toggle />
-            </Toast>
-          )}
-
           <form
             className="flex max-w-md flex-col gap-4"
             onSubmit={handleFormSubmit}
@@ -133,12 +105,16 @@ dispatch(signInStart())
               />
             </div>
             <Button type="submit" gradientDuoTone="purpleToPink">
-              {loading ? (<>
-              <Spinner color="purple"/>
-              <span className="pl-3">Loading....</span>
-              </>) : "Sign In"}
+              {loading ? (
+                <>
+                  <Spinner color="purple" />
+                  <span className="pl-3">Loading....</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
-            <OAuth/>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Don't have an account?</span>
@@ -149,7 +125,7 @@ dispatch(signInStart())
         </div>
       </div>
     </div>
-    )
+  );
 }
 
-export default SignIn
+export default SignIn;
