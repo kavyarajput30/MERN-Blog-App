@@ -39,11 +39,9 @@ const signup = wrapAsync(async (req, res, next) => {
 
 const signin = wrapAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
   if (!email || !password || email === " " || password === " ") {
     next(errorHandler(400, "All fields are required"));
   }
-
   const user = await User.findOne({ email });
   if (!user) {
     return next(errorHandler(404, "User not found"));
@@ -125,7 +123,7 @@ const signout = wrapAsync(async (req, res, next) => {
   if (!accessToken) {
     return next(errorHandler(401, "User is already signed out"));
   }
-  
+
   const options = {
     httpOnly: true,
     secure: true,
