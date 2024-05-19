@@ -125,6 +125,7 @@ const signout = wrapAsync(async (req, res, next) => {
   if (!accessToken) {
     return next(errorHandler(401, "User is already signed out"));
   }
+  
   const options = {
     httpOnly: true,
     secure: true,
