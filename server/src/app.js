@@ -25,11 +25,9 @@ app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/post", PostRouter);
 app.use("/api/v1/comment", CommentRouter);
-app.use(express.static(path.join(__dirname, "../client/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-})
+
+
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong";
