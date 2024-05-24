@@ -6,7 +6,7 @@ const app = express();
 const __dirname = path.resolve();
 app.use(
   cors({
-    origin: "https://kavya-blog-app.netlify.app/",
+    origin: "https://*.kavya-blog-app.netlify.app/",
     credentials: true,
   })
 );
