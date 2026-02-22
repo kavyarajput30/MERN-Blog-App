@@ -8,7 +8,7 @@ const port = process.env.PORT || 8080
 
 
 ConnectToDB().then(
-    app.listen(port,'0.0.0.0/0', () => {
+    app.listen(port, () => {
         console.log(`Server is running on port ${port}`)
     })
 ).catch(
