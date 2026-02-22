@@ -15,11 +15,12 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import PostPage from "./pages/PostPage.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Search from "./pages/Search.jsx";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  axios.defaults.baseURL = "https://mern-blog-app-1-8u82.onrender.com/";
+  // axios.defaults.baseURL = "https://mern-blog-app-1-8u82.onrender.com/";
+  axios.defaults.baseURL = "http://localhost:8000/";
   axios.defaults.withCredentials = true;
   return (
     <>

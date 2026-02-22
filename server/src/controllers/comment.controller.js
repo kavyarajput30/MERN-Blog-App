@@ -9,19 +9,15 @@ import Comment from "../models/comment.model.js";
 
 const createNewComment = wrapAsync(async (req, res, next) => {
   const { content } = req.body;
-  const { userId, postId } = req.body;
+  const { postId } = req.body;
+  const currentuserid = req.user.id;
+  const userId = currentuserid;
+  
   if (!content) {
     return next(errorHandler(400, "Content is required"));
   }
-
-  if (!userId) {
-    return next(errorHandler(400, "userId is required"));
-  }
   if (!postId) {
     return next(errorHandler(400, "postId is required"));
-  }
-  if (userId !== req.user.id) {
-    return next(errorHandler(400, "Please Login with your account"));
   }
 
   const newComment = await Comment.create({

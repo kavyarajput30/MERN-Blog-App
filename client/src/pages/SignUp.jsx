@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import {
-  Button,
-  Checkbox,
-  Label,
-  TextInput,
-  Alert,
-  Spinner,
-} from "flowbite-react";
+import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import { Toast } from "flowbite-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +26,7 @@ function SignUp() {
     e.preventDefault();
     try {
       setloading(true);
+      console.log(data);
       const res = await axios
         .post("api/v1/auth/sign-up", data)
         .then((res) => {
@@ -51,6 +45,7 @@ function SignUp() {
           setloading(false);
         });
     } catch (err) {
+      setloading(false);
       toast.error(err.response.data.message);
       console.log(err);
     }

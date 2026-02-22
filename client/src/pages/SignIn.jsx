@@ -21,7 +21,7 @@ function SignIn() {
     email: "",
     password: "",
   });
-  const { loading, error: errMsg } = useSelector((state) => state.user);
+  const { loading, error: errMsg} = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleInputChange = (e) => {
     let name = e.target.name;
@@ -50,8 +50,11 @@ function SignIn() {
         navigate("/");
       }
     } catch (err) {
-      toast.error(err.response.data.message);
-      dispatch(signInFailure(err.response.data.message));
+      if(err.response){
+        toast.error(err.response.data.message);
+        dispatch(signInFailure(err.response.data.message));
+      }
+      
       console.log(err);
     }
   };

@@ -24,15 +24,16 @@ function Home() {
       <div className="flex flex-col gap-6 p-6 px-3 max-w-6xl mx-auto ">
         <h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
         <p className="text-gray-500 text-xs sm:text-sm">
-          I'm Kavya Rajput, a final year B.Tech student at Feroze Gandhi
-          College, I am from Bijnore. i am deeply passionate about web
-          development and coding. Through hands-on project work and relentless
-          problem-solving, I've honed my skills in the MERN stack—MongoDB,
-          Express.js, React.js, and Node.js and NExt.js.
+          I'm Kavya Rajput, a Full Stack Developer from Bijnor with a strong
+          passion for web development and modern technologies. I specialize in
+          the MERN stack (MongoDB, Express.js, React.js, Node.js) and Next.js,
+          building scalable and user-focused applications.
         </p>
         <p className="text-gray-600 text-sm sm:text-md">
-          In my Blog you will find variety of topics related tp MERN Stacka and
-          Next.js
+          Through this blog, I share practical insights, tutorials, and
+          real-world learnings on MERN Stack and Next.js. Whether you're a
+          beginner or an experienced developer, I hope you find inspiration and
+          knowledge here.
         </p>
         <Link
           to="/search"
@@ -50,8 +51,12 @@ function Home() {
           {posts.length > 0 &&
             posts.map((post) => <PostCard key={post._id} post={post} />)}
         </div>
-        <Link to={"/search"} className="text-lg text-teal-500 hover:underline text-center mb-4">View 
-        All Posts</Link>
+        <Link
+          to={"/search"}
+          className="text-lg text-teal-500 hover:underline text-center mb-4"
+        >
+          View All Posts
+        </Link>
       </div>
     </div>
   );
