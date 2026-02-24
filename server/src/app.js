@@ -6,11 +6,7 @@ const app = express();
 const __dirname = path.resolve();
 app.use(
   cors({
-<<<<<<< HEAD
-    origin: "https://kavya-blog-app.netlify.app",
-=======
    origin: ["http://localhost:5173", "http://localhost:3000"],
->>>>>>> 8344c6b (production code with docker)
     credentials: true,
   })
 );
