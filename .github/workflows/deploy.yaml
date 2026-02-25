@@ -1,1 +1,18 @@
-name: Deploy NodeJS Application on Hostinger
+# name: Deploy NodeJS Application on Hostinger VPS
+
+# on:
+#  push:
+#   branches:
+#          -maina
+
+#  jobs:
+#    deploy:
+#      rurns-on: 
+#           -ubuntu-latest        
+
+#      steps:
+#         - name: 📥 Checkout code
+#           uses: actions/checkout@v4  
+
+#         - name: 🐳 Build Docker images
+#           run: docker compose build 
