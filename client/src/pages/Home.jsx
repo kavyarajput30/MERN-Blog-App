@@ -34,6 +34,7 @@ function Home() {
           beginner or an experienced developer, I hope you find inspiration and
           knowledge here.
         </p>
+        
         <Link
           to="/search"
           className="text-xs sm:text-sm text-teal-500 font-bold hover:underline"
