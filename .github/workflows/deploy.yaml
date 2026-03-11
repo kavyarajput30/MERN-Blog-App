@@ -1,18 +1,38 @@
-# name: Deploy NodeJS Application on Hostinger VPS
+name: Deploy MERN Blog App to Hostinger VPS
 
-# on:
-#  push:
-#   branches:
-#          -maina
+on:
+  push:
+    branches:
+      - main
 
-#  jobs:
-#    deploy:
-#      rurns-on: 
-#           -ubuntu-latest        
+jobs:
+  deploy:
+    name: Build & Deploy via SSH
+    runs-on: ubuntu-latest
 
-#      steps:
-#         - name: 📥 Checkout code
-#           uses: actions/checkout@v4  
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-#         - name: 🐳 Build Docker images
-#           run: docker compose build 
+      - name: 🚀 Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+
+            echo "📂 Navigating to project directory..."
+            cd /home/ubuntu/MERN-Blog-App
+
+            echo "⬇️ Pulling latest code..."
+            git pull origin main
+
+            echo "🐳 Building and starting containers..."
+            docker compose up -d --build
+
+            echo "🧹 Cleaning up unused Docker images..."
+            docker image prune -f
+
+            echo "✅ Deployment complete!"
