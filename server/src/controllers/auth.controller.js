@@ -22,19 +22,17 @@ const signup = wrapAsync(async (req, res, next) => {
   if (existedUser) {
     return next(errorHandler(400, "User already exists"));
   }
-  let user;
-  if (password) {
-    const hashedpass = bcryptjs.hashSync(password, 10);
-    user = await User.create({
-      email,
-      username,
-      password: hashedpass,
-    });
+  const hashedpass = bcryptjs.hashSync(password, 10);
+  const user = await User.create({
+    email,
+    username,
+    password: hashedpass,
+  });
 
-    if (!user) {
-      return next(errorHandler(500, "Error while creating user"));
-    }
+  if (!user) {
+    return next(errorHandler(500, "Error while creating user"));
   }
+
   return res
     .status(200)
     .json(new APIResponce(200, "User created successfully", user, true));
@@ -48,7 +46,9 @@ const signin = wrapAsync(async (req, res, next) => {
   const user = await User.findOne({ email });
   if (!user) {
     return next(errorHandler(404, "User not found"));
-  }
+  };
+  console.log("User found", user);
+  console.log("comparing password", password, user.password);
   const matchPass = bcryptjs.compareSync(password, user.password);
   console.log("match pass", matchPass);
   if (!matchPass) {

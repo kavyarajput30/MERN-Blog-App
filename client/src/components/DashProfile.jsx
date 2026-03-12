@@ -32,7 +32,11 @@ function DashProfile() {
   const filePickerRef = useRef();
   const [imagefileUploadprogress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileuploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: currentUser?.username,
+    email: currentUser?.email,
+    photourl: currentUser?.photourl,
+  });
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleInputImage = (e) => {
@@ -72,7 +76,7 @@ function DashProfile() {
           setImageFileURL(downloadURL);
           setFormData({ ...formData, photourl: downloadURL });
         });
-      }
+      },
     );
   };
   const handleInput = (e) => {
@@ -83,6 +87,8 @@ function DashProfile() {
     if (Object.keys(formData).length === 0) {
       return;
     }
+    formData.password = formData.password || currentUser?.password;
+    console.log("Submitting form with data:", formData);
     try {
       dispatch(updateStart());
       const res = await axios.put(
@@ -92,8 +98,9 @@ function DashProfile() {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
+      console.log("Update response:", res.data);
       if (res.data.success) {
         dispatch(updateSuccess(res.data.data));
       }

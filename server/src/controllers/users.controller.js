@@ -8,6 +8,7 @@ const usertest = (req, res) => {
 };
 const updateUser = wrapAsync(async (req, res, next) => {
   const { userId } = req.params;
+  console.log("Updating user with ID:", userId);
   if (!userId) {
     return next(errorHandler(400, "Login first"));
   }
@@ -15,12 +16,14 @@ const updateUser = wrapAsync(async (req, res, next) => {
     return next(errorHandler(403, "You can only update your account"));
   }
   const { username, email, password, photourl } = req.body;
+  console.log("Received update data:", { username, email, photourl, password });
   if (password) {
     if (password.length < 6) {
       return next(errorHandler(400, "Password must be at least 6 characters"));
     }
   }
   const hashedpass = bcryptjs.hashSync(password, 10);
+  console.log("Hashed password:", hashedpass);
 
   if (username) {
     if (username.length < 7 || username.length > 20) {
@@ -40,7 +43,7 @@ const updateUser = wrapAsync(async (req, res, next) => {
       );
     }
   }
-
+ console.log("Updating user with data:", { username, email, photourl });
   const updateduser = await User.findByIdAndUpdate(
     userId,
     {
@@ -51,7 +54,7 @@ const updateUser = wrapAsync(async (req, res, next) => {
     },
     { new: true }
   );
-
+  console.log("Updated user:", updateduser);
   if (!updateduser) {
     return next(errorHandler(404, "User not Updated"));
   }
