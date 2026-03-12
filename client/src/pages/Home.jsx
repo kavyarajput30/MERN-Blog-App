@@ -25,7 +25,7 @@ function Home() {
         <h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
         <p className="text-gray-500 text-xs sm:text-sm">
           I'm Kavya Rajput, a Full Stack Developer with 3 years of Industry experience. Specialize in
-          the MERN stack (MongoDB, Express.js, React.js, Node.js) and Next.js,
+          the MERN stack (MongoDB, Express.js, React.js, Node.js)
           building scalable and user-focused applications.
         </p>
         <p className="text-gray-600 text-sm sm:text-md">
