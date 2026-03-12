@@ -16,23 +16,25 @@ const signup = wrapAsync(async (req, res, next) => {
     email === " " ||
     password === " "
   ) {
-    next(errorHandler(400, "All fields are required"));
+    return next(errorHandler(400, "All fields are required"));
   }
   const existedUser = await User.findOne({ email });
   if (existedUser) {
-    next(errorHandler(400, "User already exists"));
+    return next(errorHandler(400, "User already exists"));
   }
-  const hashedpass = bcryptjs.hashSync(password, 10);
-  const user = await User.create({
-    email,
-    username,
-    password: hashedpass,
-  });
+  let user;
+  if (password) {
+    const hashedpass = bcryptjs.hashSync(password, 10);
+    user = await User.create({
+      email,
+      username,
+      password: hashedpass,
+    });
 
-  if (!user) {
-    next(errorHandler(500, "Error while creating user"));
+    if (!user) {
+      return next(errorHandler(500, "Error while creating user"));
+    }
   }
-
   return res
     .status(200)
     .json(new APIResponce(200, "User created successfully", user, true));
@@ -41,7 +43,7 @@ const signup = wrapAsync(async (req, res, next) => {
 const signin = wrapAsync(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password || email === " " || password === " ") {
-    next(errorHandler(400, "All fields are required"));
+    return next(errorHandler(400, "All fields are required"));
   }
   const user = await User.findOne({ email });
   if (!user) {
@@ -55,7 +57,7 @@ const signin = wrapAsync(async (req, res, next) => {
 
   const accessToken = jwt.sign(
     { id: user._id, username: user.username, isAdmin: user.isAdmin },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
   // cookies options
   const options = {
@@ -63,7 +65,7 @@ const signin = wrapAsync(async (req, res, next) => {
     secure: true,
   };
 
-  res
+  return res
     .status(200)
     .cookie("accessToken", accessToken, options)
     .json(new APIResponce(200, "User Logged In successfully", user, true));
@@ -76,7 +78,7 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
   if (user) {
     const accessToken = jwt.sign(
       { id: user._id, username: user.username },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
     );
     // cookies options
     const options = {
@@ -84,7 +86,7 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
       secure: true,
     };
 
-    res
+    return res
       .status(200)
       .cookie("accessToken", accessToken, options)
       .json(new APIResponce(200, "User Exists", user, true));
@@ -102,18 +104,18 @@ const googleSignIn = wrapAsync(async (req, res, next) => {
   });
 
   if (!newUser) {
-    next(errorHandler(500, "Error while creating user"));
+    return next(errorHandler(500, "Error while creating user"));
   }
   const accessToken = jwt.sign(
     { id: newUser._id, username: newUser.username, isAdmin: newUser.isAdmin },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
   const options = {
     httpOnly: true,
     secure: true,
   };
 
-  res
+  return res
     .status(200)
     .cookie("accessToken", accessToken, options)
     .json(new APIResponce(200, "User created successfully", newUser, true));

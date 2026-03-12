@@ -12,7 +12,7 @@ const updateUser = wrapAsync(async (req, res, next) => {
     return next(errorHandler(400, "Login first"));
   }
   if (userId !== req.user.id) {
-    next(errorHandler(403, "You can only update your account"));
+    return next(errorHandler(403, "You can only update your account"));
   }
   const { username, email, password, photourl } = req.body;
   if (password) {
@@ -55,7 +55,7 @@ const updateUser = wrapAsync(async (req, res, next) => {
   if (!updateduser) {
     return next(errorHandler(404, "User not Updated"));
   }
-  res.status(200).json(new APIResponce(200, "User Updated", updateduser, true));
+  return res.status(200).json(new APIResponce(200, "User Updated", updateduser, true));
 });
 
 const deleteUser = wrapAsync(async (req, res, next) => {
@@ -74,8 +74,7 @@ const deleteUser = wrapAsync(async (req, res, next) => {
   if (!deleteduser) {
     return next(errorHandler(404, "User not deleted"));
   }
-  res.status(200).json(new APIResponce(200, "User Deleted", deleteduser, true));
-  p;
+  return res.status(200).json(new APIResponce(200, "User Deleted", deleteduser, true));
 });
 
 const getAllUsers = wrapAsync(async (req, res, next) => {
