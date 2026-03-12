@@ -19,8 +19,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  // axios.defaults.baseURL = "https://mern-blog-app-1-8u82.onrender.com/";
-  axios.defaults.baseURL = "http://localhost:8000/";
+  axios.defaults.baseURL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000/";
   axios.defaults.withCredentials = true;
   return (
     <>
