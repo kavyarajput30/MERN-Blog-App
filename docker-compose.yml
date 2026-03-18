@@ -15,7 +15,8 @@ services:
     build:
       context: ./client
       args:
-        VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY}
+        - VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
+        - VITE_API_URL=${VITE_API_URL}
     container_name: client
     ports:
       - "5173:3000"
