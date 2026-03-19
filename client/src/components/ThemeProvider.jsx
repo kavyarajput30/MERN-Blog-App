@@ -4,7 +4,7 @@ function ThemeProvider({ children }) {
   const { theme } = useSelector((state) => state.theme);
   return (
     <div className={theme}>
-      <div className="bg-white text-gray-700 dark:text-gray-200 dark:bg-[rgb(16,23,42)] min-h-screen">
+      <div style={{ minHeight: "100vh", background: "var(--cream)", color: "var(--ink)", transition: "background 0.3s, color 0.3s" }}>
         {children}
       </div>
     </div>

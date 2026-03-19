@@ -1,136 +1,149 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
-import { Toast } from "flowbite-react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { HiInformationCircle } from "react-icons/hi";
 import axios from "axios";
 
 function SignUp() {
   const navigate = useNavigate();
-  const [data, setData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [loading, setloading] = useState(false);
+  const [data, setData] = useState({ username: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value.trim();
-    return setData({ ...data, [name]: value });
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value.trim() });
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      setloading(true);
-      console.log(data);
-      const res = await axios
-        .post("api/v1/auth/sign-up", data)
-        .then((res) => {
-          console.log(res.data);
-          toast.success("Account created successfully");
-          setData({
-            username: "",
-            email: "",
-            password: "",
-          });
-          setloading(false);
-          navigate("/sign-in");
-        })
-        .catch((err) => {
-          toast.error(err.response.data.message);
-          setloading(false);
-        });
+      setLoading(true);
+      await axios.post("api/v1/auth/sign-up", data);
+      toast.success("Account created successfully");
+      setData({ username: "", email: "", password: "" });
+      navigate("/sign-in");
     } catch (err) {
-      setloading(false);
-      toast.error(err.response.data.message);
-      console.log(err);
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px 14px",
+    borderRadius: "10px",
+    border: "1.5px solid var(--border)",
+    background: "var(--surface)",
+    color: "var(--ink)",
+    fontSize: "0.9rem",
+    fontFamily: "'DM Sans', sans-serif",
+    outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s",
+  };
+
+  const labelStyle = {
+    display: "block",
+    fontSize: "0.78rem",
+    fontFamily: "'DM Mono', monospace",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "var(--muted)",
+    marginBottom: "6px",
+  };
+
+  const focusIn = (e) => { e.target.style.borderColor = "var(--teal)"; e.target.style.boxShadow = "0 0 0 3px rgba(13,148,136,0.12)"; };
+  const focusOut = (e) => { e.target.style.borderColor = "var(--border)"; e.target.style.boxShadow = "none"; };
+
   return (
-    <div className="min-h-screen mt-20">
-      <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
-        <div className="flex-1">
-          <Link to="/" className=" font-bold dark:text-white text-4xl">
-            <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white mr-1">
-              Kavya's
-            </span>
-            Blog
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem 1rem" }}>
+      <div style={{ display: "flex", maxWidth: "800px", width: "100%", gap: "3rem", alignItems: "center", flexWrap: "wrap" }}>
+
+        {/* Left branding */}
+        <div style={{ flex: 1, minWidth: "220px" }}>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1 }}>Kavya's</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.6rem", color: "var(--teal)", marginTop: "2px" }}>Blog</p>
           </Link>
-          <p className="text-sm mt-5">
-            This is my demo project using MERN. You can sign up with your email
-            and password or with Google.
+          <p style={{ marginTop: "1.5rem", fontSize: "0.9rem", color: "var(--muted)", lineHeight: 1.7, maxWidth: "280px" }}>
+            Join the community. Get access to weekly tutorials, MERN stack guides, and hands-on project breakdowns.
           </p>
+          <div style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            {["Weekly MERN articles", "Hands-on JS projects", "Community comments"].map((feat) => (
+              <div key={feat} style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--teal)", flexShrink: 0 }} />
+                <span style={{ fontSize: "0.875rem", color: "var(--muted)" }}>{feat}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex-1">
-          <form
-            className="flex max-w-md flex-col gap-4"
-            onSubmit={handleFormSubmit}
-          >
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="username" value="Your Username" />
+
+        {/* Right form */}
+        <div style={{ flex: 1, minWidth: "280px", background: "var(--card-bg)", border: "1px solid var(--border)", borderRadius: "20px", padding: "2rem", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.25rem" }}>
+            Create account
+          </h2>
+          <p style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: "1.75rem" }}>It's free and always will be</p>
+
+          <form onSubmit={handleFormSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+            {[
+              { label: "Username", name: "username", type: "text", placeholder: "your_username" },
+              { label: "Email", name: "email", type: "email", placeholder: "you@example.com" },
+              { label: "Password", name: "password", type: "password", placeholder: "••••••••" },
+            ].map(({ label, name, type, placeholder }) => (
+              <div key={name}>
+                <label style={labelStyle}>{label}</label>
+                <input
+                  type={type}
+                  name={name}
+                  placeholder={placeholder}
+                  value={data[name]}
+                  onChange={handleInputChange}
+                  required
+                  style={inputStyle}
+                  onFocus={focusIn}
+                  onBlur={focusOut}
+                />
               </div>
-              <TextInput
-                id="username"
-                type="text"
-                placeholder="username"
-                name="username"
-                value={data.username}
-                required
-                onChange={handleInputChange}
-              />
+            ))}
+
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                padding: "13px",
+                borderRadius: "10px",
+                background: loading ? "var(--muted)" : "var(--teal)",
+                color: "white",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "0.95rem",
+                fontWeight: 500,
+                border: "none",
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "opacity 0.2s, transform 0.2s",
+                marginTop: "0.25rem",
+              }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "translateY(-1px)"; } }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              {loading ? "Creating account…" : "Sign Up"}
+            </button>
+
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)", fontFamily: "'DM Mono', monospace" }}>or</span>
+              <div style={{ flex: 1, height: "1px", background: "var(--border)" }} />
             </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="email1" value="Your email" />
-              </div>
-              <TextInput
-                id="email1"
-                type="email"
-                placeholder="email"
-                name="email"
-                value={data.email}
-                required
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="password1" value="Your password" />
-              </div>
-              <TextInput
-                id="password1"
-                type="password"
-                placeholder="password"
-                name="password"
-                value={data.password}
-                required
-                onChange={handleInputChange}
-              />
-            </div>
-            <Button type="submit" gradientDuoTone="purpleToPink">
-              {loading ? (
-                <>
-                  <Spinner color="purple" />
-                  <span className="pl-3">Loading....</span>
-                </>
-              ) : (
-                "Sign Up"
-              )}
-            </Button>
+
             <OAuth />
           </form>
 
-          <div className="flex gap-2 text-sm mt-5">
-            <span>Already have an account?</span>
-            <Link to="/sign-in" className="text-blue-500">
+          <p style={{ marginTop: "1.25rem", fontSize: "0.85rem", color: "var(--muted)", textAlign: "center" }}>
+            Already have an account?{" "}
+            <Link to="/sign-in" style={{ color: "var(--teal)", fontWeight: 500, textDecoration: "underline", textUnderlineOffset: "3px" }}>
               Sign In
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </div>
