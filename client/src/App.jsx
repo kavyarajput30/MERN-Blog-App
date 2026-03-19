@@ -15,6 +15,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import PostPage from "./pages/PostPage.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Search from "./pages/Search.jsx";
+import NotFound from "./pages/NotFound.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,6 +42,7 @@ function App() {
         </Route>
         <Route path="/project" element={<Project />} />
         <Route path="post/:postSlug" element={<PostPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
       <ToastContainer
