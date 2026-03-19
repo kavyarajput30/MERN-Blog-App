@@ -120,7 +120,17 @@ function SignIn() {
               />
             </div>
             <div>
-              <label style={labelStyle}>Password</label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "6px" }}>
+                <label style={labelStyle}>Password</label>
+                <Link
+                  to="/forgot-password"
+                  style={{ fontSize: "0.78rem", color: "var(--teal)", textDecoration: "none", fontFamily: "'DM Sans', sans-serif", transition: "opacity 0.2s" }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = "0.7"}
+                  onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 type="password"
                 name="password"

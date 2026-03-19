@@ -22,7 +22,15 @@ const UserSchema = new Schema(
     isAdmin:{
       type: Boolean,
       default: false,
-    }
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );
