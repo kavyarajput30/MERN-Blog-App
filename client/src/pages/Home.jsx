@@ -29,7 +29,7 @@ function Home() {
           color: "var(--teal)",
           marginBottom: "1.25rem",
         }}>
-          ✦ Full Stack Developer · MERN Stack
+          Full Stack Developer · MERN Stack
         </p>
 
         <h1 className="animate-fade-up-1" style={{
